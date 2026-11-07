@@ -134,6 +134,11 @@ def genres_only_in_one(movies_a, movies_b):
         
     return genres_a - genres_b
 
+def iter_high_rated(movies, min_rating=8.0):
+    for movie in movies:
+        if movie["rating"] >= min_rating:
+            yield movie
+
 def main():
     print("Hello from catalog_analysis.py!")
     
@@ -211,6 +216,17 @@ def main():
     
     print("\nЖанры только в movies[5:6], но не в movies[:5]:")
     print(genres_only_in_one(movies[5:6], movies[:5]))
+
+    print("\n--- Проверка Этапа 8 ---")
+    
+    print("Фильмы с рейтингом >= 8.0:")
+    for movie in iter_high_rated(movies):
+        print(format_report_line(movie))
+        
+    print("\nСуммарная длительность фильмов с рейтингом > 7:")
+    # Генераторное выражение (без квадратных скобок) передается в sum()
+    total_duration = sum(m["duration_min"] for m in movies if m["rating"] > 7)
+    print(f" - {total_duration} минут")
 
 if __name__ == "__main__":
     main()
