@@ -145,7 +145,6 @@ def iter_high_rated(movies, min_rating=8.0):
 
 
 def build_report(movies):
-    print("ОТЧЕТ ПО КАТАЛОГУ")
     
     # 1. Общая статистика
     avg_rating = average_rating(movies)
@@ -172,12 +171,7 @@ def build_report(movies):
 
 
 def main():
-    # Очищаем консоль перед выводом отчета для красоты (опционально)
-    import os
-    os.system('cls' if os.name == 'nt' else 'clear')
-    
     build_report(movies)
-
 
 if __name__ == "__main__":
     main()
