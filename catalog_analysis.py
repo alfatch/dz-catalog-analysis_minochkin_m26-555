@@ -47,6 +47,29 @@ def duration_in_hours(minutes):
     mins = minutes % 60
     return f"{hours}ч {mins}м"
 
+def rating_tier(rating):
+    """Возвращает категорию фильма по его оценке."""
+    if rating >= 9:
+        return "шедевр"
+    elif rating >= 7:
+        # Используем тернарный оператор, как того требует задание
+        return "хорошо" if rating < 9 else "шедевр" 
+    elif rating >= 5:
+        return "средне"
+    else:
+        # И здесь тоже используем тернарный оператор для надежности
+        return "слабо" if rating < 5 else "средне"
+
+def decade_label(year):
+    """Возвращает метку десятилетия для фильма через оператор match."""
+    match year:
+        case _ if year > 2020:
+            return "новые"
+        case _ if 2015 <= year <= 2020:
+            return "недавние"
+        case _:
+            return "старые"
+
 def main():
     print("Hello from catalog_analysis.py!")
     
@@ -55,6 +78,17 @@ def main():
     print(f"Средняя оценка: {average_rating(movies)}")
     print(f"Статистика возраста: {catalog_age_stats(movies)}")
     print(f"155 минут в часах: {duration_in_hours(155)}")
+
+    # --- Тестирование функций Этапа 2 ---
+    print("\n--- Проверка Этапа 2 ---")
+    print(f"Оценка 9.2: {rating_tier(9.2)}")
+    print(f"Оценка 7.5: {rating_tier(7.5)}")
+    print(f"Оценка 6.0: {rating_tier(6.0)}")
+    print(f"Оценка 4.5: {rating_tier(4.5)}")
+    
+    print(f"Год 2024: {decade_label(2024)}")
+    print(f"Год 2018: {decade_label(2018)}")
+    print(f"Год 2011: {decade_label(2011)}")
 
 if __name__ == "__main__":
     main()
