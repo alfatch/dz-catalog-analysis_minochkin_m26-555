@@ -48,7 +48,7 @@ def duration_in_hours(minutes):
     return f"{hours}ч {mins}м"
 
 def rating_tier(rating):
-    """Возвращает категорию фильма по его оценке."""
+    """Возвращает категорию фильма по оценке."""
     if rating >= 9:
         return "шедевр"
     elif rating >= 7:
@@ -89,27 +89,36 @@ def normalize_title(title):
 
 def make_slug(title):
     """Превращает название в слаг (например, 'Silent Hours' -> 'silent-hours')."""
-    # Сначала нормализуем, затем в нижний регистр и меняем пробелы на дефисы
     return normalize_title(title).lower().replace(" ", "-")
 
 def format_report_line(movie):
     """Возвращает отформатированную строку с описанием фильма."""
-    # Сортируем жанры по алфавиту. set -> list нужен для сортировки.
     genres_str = ", ".join(sorted(list(movie["genres"])))
     duration_str = duration_in_hours(movie["duration_min"])
     
     return f'"{movie["title"]}" ({movie["year"]}) — {movie["rating"]}/10, {duration_str}, жанры: {genres_str}'
 
+def titles_sorted_by_rating(movies):
+    """Возвращает список названий фильмов, отсортированных по убыванию рейтинга."""
+    sorted_movies = sorted(movies, key=lambda m: m["rating"], reverse=True)
+    # Извлекаем только названия
+    return [movie["title"] for movie in sorted_movies]
+
+def top_n_by_rating(movies, n=3):
+    """Возвращает список из n кортежей (title, rating) — топ по рейтингу."""
+    sorted_movies = sorted(movies, key=lambda m: m["rating"], reverse=True)
+    return [(movie["title"], movie["rating"]) for movie in sorted_movies[:n]]
+
 def main():
     print("Hello from catalog_analysis.py!")
     
-    # --- Тестирование функций Этапа 1 ---
+    #Тестирование функций Этапа 1
     print("\n--- Проверка Этапа 1 ---")
     print(f"Средняя оценка: {average_rating(movies)}")
     print(f"Статистика возраста: {catalog_age_stats(movies)}")
     print(f"155 минут в часах: {duration_in_hours(155)}")
 
-    # --- Тестирование функций Этапа 2 ---
+    #Тестирование функций Этапа 2
     print("\n--- Проверка Этапа 2 ---")
     print(f"Оценка 9.2: {rating_tier(9.2)}")
     print(f"Оценка 7.5: {rating_tier(7.5)}")
@@ -119,7 +128,7 @@ def main():
     print(f"Год 2018: {decade_label(2018)}")
     print(f"Год 2011: {decade_label(2011)}")
 
-    # --- Тестирование функций Этапа 3 ---
+    #Тестирование функций Этапа 3
     print("\n--- Проверка Этапа 3 ---")
     print("\n1. Фильмы не в жанре 'comedy' (for + continue):")
     for movie in movies:
@@ -140,12 +149,20 @@ def main():
     print("\n3. Количество фильмов длиннее 120 минут:")
     print(f" - {count_long_movies(movies, 120)} шт.")
 
-    # --- Тестирование функций Этапа 4 ---
+    #Тестирование функций Этапа 4
     print("\n--- Проверка Этапа 4 ---")
-    
     print(f"normalize_title('silent hours') -> {normalize_title('silent hours')}")
     print(f"make_slug('Silent Hours')       -> {make_slug('Silent Hours')}")
     print(f"format_report_line(movies[7])   -> {format_report_line(movies[7])}")
+
+    #Тестирование функций Этапа 5
+    print("\n--- Проверка Этапа 5 ---")
+    
+    print("Список названий по убыванию рейтинга:")
+    print(titles_sorted_by_rating(movies))
+    
+    print("\nТоп-3 фильма по рейтингу:")
+    print(top_n_by_rating(movies, 3))
 
 if __name__ == "__main__":
     main()
