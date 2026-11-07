@@ -112,6 +112,28 @@ def high_rated_movies(movies):
     avg = average_rating(movies)
     return {movie["title"]: movie["rating"] for movie in movies if movie["rating"] > avg}
 
+def all_genres(movies):
+    genres = set()
+    for movie in movies:
+        genres = genres | movie["genres"]
+    return genres
+
+def common_actors(movie1, movie2):
+    actors1 = set(movie1["actors"])
+    actors2 = set(movie2["actors"])
+    return actors1 & actors2
+
+def genres_only_in_one(movies_a, movies_b):
+    genres_a = set()
+    for movie in movies_a:
+        genres_a.update(movie["genres"])
+        
+    genres_b = set()
+    for movie in movies_b:
+        genres_b.update(movie["genres"])
+        
+    return genres_a - genres_b
+
 def main():
     print("Hello from catalog_analysis.py!")
     
@@ -143,7 +165,9 @@ def main():
     index = 0
     while index < len(movies):
         if movies[index]["rating"] > 9.0:
-            print(f" - Найден: {movies[index]['title']} (рейтинг {movies[index]['rating']})")
+            title = movies[index]["title"]
+            rating = movies[index]["rating"]
+            print(f" - Найден: {title} (рейтинг {rating})")
             break
         index += 1
     else:
@@ -167,17 +191,26 @@ def main():
 
     # --- Тестирование функций Этапа 6 ---
     print("\n--- Проверка Этапа 6 ---")
-    
     print("Количество фильмов по жанрам:")
     print(count_by_genre(movies))
-    
     print("\nФильмография актеров:")
     filmography = actor_filmography(movies)
     for actor, films in filmography.items():
         print(f" - {actor}: {films}")
-        
     print(f"\nФильмы с рейтингом выше среднего ({average_rating(movies)}):")
     print(high_rated_movies(movies))
+
+    # --- Тестирование функций Этапа 7 ---
+    print("\n--- Проверка Этапа 7 ---")
+    
+    print("Все уникальные жанры:")
+    print(all_genres(movies))
+    
+    print("\nОбщие актеры в movies[0] и movies[3]:")
+    print(common_actors(movies[0], movies[3]))
+    
+    print("\nЖанры только в movies[5:6], но не в movies[:5]:")
+    print(genres_only_in_one(movies[5:6], movies[:5]))
 
 if __name__ == "__main__":
     main()
