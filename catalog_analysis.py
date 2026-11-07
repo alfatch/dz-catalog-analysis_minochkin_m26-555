@@ -70,6 +70,14 @@ def decade_label(year):
         case _:
             return "старые"
 
+def count_long_movies(movies, threshold=120):
+    """Считает количество фильмов длиннее threshold минут через цикл for."""
+    count = 0
+    for movie in movies:
+        if movie["duration_min"] > threshold:
+            count += 1
+    return count
+
 def main():
     print("Hello from catalog_analysis.py!")
     
@@ -89,6 +97,28 @@ def main():
     print(f"Год 2024: {decade_label(2024)}")
     print(f"Год 2018: {decade_label(2018)}")
     print(f"Год 2011: {decade_label(2011)}")
+
+    # --- Тестирование функций Этапа 3 ---
+    print("\n--- Проверка Этапа 3 ---")
+    
+    print("\n1. Фильмы не в жанре 'comedy' (for + continue):")
+    for movie in movies:
+        if "comedy" in movie["genres"]:
+            continue
+        print(f" - {movie['title']}")
+
+    print("\n2. Первый фильм с рейтингом > 9.0 (while + break):")
+    index = 0
+    while index < len(movies):
+        if movies[index]["rating"] > 9.0:
+            print(f" - Найден: {movies[index]['title']} (рейтинг {movies[index]['rating']})")
+            break
+        index += 1
+    else:
+        print(" - Шедевров не найдено")
+
+    print("\n3. Количество фильмов длиннее 120 минут:")
+    print(f" - {count_long_movies(movies, 120)} шт.")
 
 if __name__ == "__main__":
     main()
