@@ -78,6 +78,28 @@ def count_long_movies(movies, threshold=120):
             count += 1
     return count
 
+def normalize_title(title):
+    """Приводит строку к Title Case вручную, без использования str.title()."""
+    words = title.split()
+    normalized_words = []
+    for word in words:
+        if word: # Защита от пустых строк на случай двойных пробелов
+            normalized_words.append(word[0].upper() + word[1:])
+    return " ".join(normalized_words)
+
+def make_slug(title):
+    """Превращает название в слаг (например, 'Silent Hours' -> 'silent-hours')."""
+    # Сначала нормализуем, затем в нижний регистр и меняем пробелы на дефисы
+    return normalize_title(title).lower().replace(" ", "-")
+
+def format_report_line(movie):
+    """Возвращает отформатированную строку с описанием фильма."""
+    # Сортируем жанры по алфавиту. set -> list нужен для сортировки.
+    genres_str = ", ".join(sorted(list(movie["genres"])))
+    duration_str = duration_in_hours(movie["duration_min"])
+    
+    return f'"{movie["title"]}" ({movie["year"]}) — {movie["rating"]}/10, {duration_str}, жанры: {genres_str}'
+
 def main():
     print("Hello from catalog_analysis.py!")
     
@@ -93,20 +115,18 @@ def main():
     print(f"Оценка 7.5: {rating_tier(7.5)}")
     print(f"Оценка 6.0: {rating_tier(6.0)}")
     print(f"Оценка 4.5: {rating_tier(4.5)}")
-    
     print(f"Год 2024: {decade_label(2024)}")
     print(f"Год 2018: {decade_label(2018)}")
     print(f"Год 2011: {decade_label(2011)}")
 
     # --- Тестирование функций Этапа 3 ---
     print("\n--- Проверка Этапа 3 ---")
-    
     print("\n1. Фильмы не в жанре 'comedy' (for + continue):")
     for movie in movies:
         if "comedy" in movie["genres"]:
             continue
         print(f" - {movie['title']}")
-
+    
     print("\n2. Первый фильм с рейтингом > 9.0 (while + break):")
     index = 0
     while index < len(movies):
@@ -119,6 +139,13 @@ def main():
 
     print("\n3. Количество фильмов длиннее 120 минут:")
     print(f" - {count_long_movies(movies, 120)} шт.")
+
+    # --- Тестирование функций Этапа 4 ---
+    print("\n--- Проверка Этапа 4 ---")
+    
+    print(f"normalize_title('silent hours') -> {normalize_title('silent hours')}")
+    print(f"make_slug('Silent Hours')       -> {make_slug('Silent Hours')}")
+    print(f"format_report_line(movies[7])   -> {format_report_line(movies[7])}")
 
 if __name__ == "__main__":
     main()
